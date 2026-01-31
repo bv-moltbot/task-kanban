@@ -1,15 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import pb from '@/lib/pocketbase'
 
-interface RouteContext {
-  params: Promise<{ id: string }>
-}
-
 export async function PATCH(
   request: NextRequest,
-  context: RouteContext
+  { params }: { params: { id: string } }
 ) {
-  const { id } = await context.params
   try {
     const authCookie = request.cookies.get('pb_auth')
     if (!authCookie) {
@@ -35,9 +30,8 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  context: RouteContext
+  { params }: { params: { id: string } }
 ) {
-  const { id } = await context.params
   try {
     const authCookie = request.cookies.get('pb_auth')
     if (!authCookie) {

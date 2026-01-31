@@ -9,9 +9,7 @@ export async function GET(request: NextRequest) {
     }
 
     pb.authStore.save(authCookie.value, null)
-    const records = await pb.collection('tasks').getFullList(undefined, 50, {
-      sort: '-created'
-    })
+    const records = await pb.collection('tasks').getList(1, 50)
 
     return NextResponse.json({ 
       success: true, 
