@@ -1,10 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import pb from '@/lib/pocketbase'
 
+interface RouteContext {
+  params: Promise<{ id: string }>
+}
+
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: RouteContext
 ) {
+  const { id } = await context.params
   try {
     const authCookie = request.cookies.get('pb_auth')
     if (!authCookie) {
@@ -14,7 +19,7 @@ export async function PATCH(
     pb.authStore.save(authCookie.value, null)
     const data = await request.json()
 
-    const record = await pb.collection('tasks').update(params.id, {
+    const record = await pb.collection('tasks').update(id, {
       title: data.title,
       description: data.description,
       status: data.status,
@@ -30,8 +35,9 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: RouteContext
 ) {
+  const { id } = await context.params
   try {
     const authCookie = request.cookies.get('pb_auth')
     if (!authCookie) {
@@ -39,7 +45,7 @@ export async function DELETE(
     }
 
     pb.authStore.save(authCookie.value, null)
-    await pb.collection('tasks').delete(params.id)
+    await pb.collection('tasks').delete(id)
 
     return NextResponse.json({ success: true })
   } catch (error: any) {

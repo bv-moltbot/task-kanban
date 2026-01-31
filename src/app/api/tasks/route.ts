@@ -4,7 +4,6 @@ import pb from '@/lib/pocketbase'
 export async function GET(request: NextRequest) {
   try {
     const authCookie = request.cookies.get('pb_auth')
-    
     if (!authCookie) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -20,10 +19,7 @@ export async function GET(request: NextRequest) {
       totalItems: records.totalItems 
     })
   } catch (error: any) {
-    return NextResponse.json(
-      { success: false, error: error.message || 'Failed to fetch tasks' },
-      { status: 500 }
-    )
+    return NextResponse.json({ success: false, error: error.message || 'Failed to fetch tasks' }, { status: 500 })
   }
 }
 
